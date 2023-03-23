@@ -10,7 +10,7 @@ import (
 var LoggingTypes = LogWarn | LogError | LogFatal
 
 var Default interface {
-	Message(level LogType, err error, msg string, with ...exprStrings)
+	Message(level LogType, err error, msg string, with ...Pair)
 	Log(content Container)
 } = DefaultLoggers.CommandLine
 
@@ -43,7 +43,7 @@ type CommandLineLogger struct {
 	DefaultStamp LogStampConfig
 }
 
-func (cl CommandLineLogger) Message(level LogType, err error, msg string, with ...exprStrings) {
+func (cl CommandLineLogger) Message(level LogType, err error, msg string, with ...Pair) {
 	cl.Log(cl.DefaultStamp.StampDetail(Container{
 		Type:     level,
 		Message:  msg,
