@@ -3,18 +3,16 @@ package errlog
 import "strings"
 
 type exprStrings interface {
-	exprStrings(dest []string)
+	exprStrings() []string
 }
 
 func exprStringsToString(exprStrings exprStrings) string {
-	target := make([]string, 0)
-	exprStrings.exprStrings(target)
-	return strings.Join(target, "")
+	return strings.Join(exprStrings.exprStrings(), "")
 }
 
-type exprStringsFunc func(dest []string)
+type exprStringsFunc func() []string
 
-func (fn exprStringsFunc) exprStrings(dest []string) { fn(dest) }
+func (fn exprStringsFunc) exprStrings() []string { return fn() }
 
 type Pair struct {
 	Key  string

@@ -48,6 +48,7 @@ func (cl CommandLineLogger) Message(level LogType, err error, msg string, with .
 		Type:     level,
 		Message:  msg,
 		Internal: err,
+		With:     with,
 	}, 1))
 }
 
@@ -89,7 +90,6 @@ func (cl CommandLineLogger) Log(content Container) {
 		return nil
 	}
 
-	withCache := make([]string, 256)
 	content.WalkErrorstack(func(container Container, wrapped error) {
 
 		if container.stampConfig.EnableTimestamp {
@@ -129,14 +129,13 @@ func (cl CommandLineLogger) Log(content Container) {
 			checkAndPrint(FgReset, " (")
 			checkAndPrint(FgCyan, container.With[0].Key)
 			checkAndPrint(FgReset, ": ")
-			container.With[0].expr.exprStrings(withCache)
-			checkAndPrint(msgColor, withCache...)
+			checkAndPrint(msgColor, container.With[0].expr.exprStrings()...)
 			for _, with := range container.With[1:] {
 				checkAndPrint(FgReset, ", ")
 				checkAndPrint(FgCyan, with.Key)
 				checkAndPrint(FgReset, ": ")
-				container.With[0].expr.exprStrings(withCache)
-				checkAndPrint(msgColor, withCache...)
+
+				checkAndPrint(msgColor, with.expr.exprStrings()...)
 			}
 			checkAndPrint(FgReset, ")")
 		}
@@ -154,6 +153,7 @@ func (cl CommandLineLogger) Log(content Container) {
 	})
 
 	if content.stackTraces != nil {
+		withCache := make([]string, 256)
 		n := content.StackTrace(withCache)
 		if n > 0 {
 			withCache := withCache[:n]

@@ -10,10 +10,8 @@ import (
 func QuotedString(key, str string) Pair {
 	return Pair{
 		Key: key,
-		expr: exprStringsFunc(func(dest []string) {
-			dest = dest[:0]
-			dest = append(dest, "'", str, "'")
-			_ = dest
+		expr: exprStringsFunc(func() []string {
+			return []string{"'", str, "'"}
 		}),
 	}
 }
@@ -21,10 +19,8 @@ func QuotedString(key, str string) Pair {
 func Int[T constraints.Signed](key string, signed T) Pair {
 	return Pair{
 		Key: key,
-		expr: exprStringsFunc(func(dest []string) {
-			dest = dest[:0]
-			dest = append(dest, strconv.FormatInt(int64(signed), 10))
-			_ = dest
+		expr: exprStringsFunc(func() []string {
+			return []string{strconv.FormatInt(int64(signed), 10)}
 		}),
 	}
 }
@@ -32,10 +28,10 @@ func Int[T constraints.Signed](key string, signed T) Pair {
 func Uint[T constraints.Unsigned](key string, unsigned T) Pair {
 	return Pair{
 		Key: key,
-		expr: exprStringsFunc(func(dest []string) {
-			dest = dest[:0]
-			dest = append(dest, strconv.FormatUint(uint64(unsigned), 10), " (0x"+strconv.FormatUint(uint64(unsigned), 16)+")")
-			_ = dest
+		expr: exprStringsFunc(func() []string {
+			return []string{
+				strconv.FormatUint(uint64(unsigned), 10), " (0x", strconv.FormatUint(uint64(unsigned), 16), ")",
+			}
 		}),
 	}
 }
@@ -43,10 +39,8 @@ func Uint[T constraints.Unsigned](key string, unsigned T) Pair {
 func Bool(key string, boolean bool) Pair {
 	return Pair{
 		Key: key,
-		expr: exprStringsFunc(func(dest []string) {
-			dest = dest[:0]
-			dest = append(dest, strconv.FormatBool(boolean))
-			_ = dest
+		expr: exprStringsFunc(func() []string {
+			return []string{strconv.FormatBool(boolean)}
 		}),
 	}
 }
@@ -54,10 +48,8 @@ func Bool(key string, boolean bool) Pair {
 func TypeOf(key string, value interface{}) Pair {
 	return Pair{
 		Key: key,
-		expr: exprStringsFunc(func(dest []string) {
-			dest = dest[:0]
-			dest = append(dest, reflect.TypeOf(value).String())
-			_ = dest
+		expr: exprStringsFunc(func() []string {
+			return []string{reflect.TypeOf(value).String()}
 		}),
 	}
 }
