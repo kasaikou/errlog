@@ -44,6 +44,9 @@ func (conf *LogStampConfig) Stamp(container Container) Container {
 
 func (conf *LogStampConfig) StampDetail(container Container, traceSkip int) Container {
 
+	if conf == nil {
+		return DefaultStamp.StampDetail(container, traceSkip+1)
+	}
 	if container.stampConfig != nil {
 		return container
 	}

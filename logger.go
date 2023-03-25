@@ -18,9 +18,8 @@ var DefaultLoggers = struct {
 	CommandLine CommandLineLogger
 }{
 	CommandLine: CommandLineLogger{
-		Color:        true,
-		Dest:         os.Stdout,
-		DefaultStamp: DefaultStamp,
+		Color: true,
+		Dest:  os.Stdout,
 	},
 }
 
@@ -40,7 +39,7 @@ func writeStrings(dest io.Writer, strs ...string) (int, error) {
 type CommandLineLogger struct {
 	Color        bool
 	Dest         io.Writer
-	DefaultStamp LogStampConfig
+	DefaultStamp *LogStampConfig
 }
 
 func (cl CommandLineLogger) Message(level LogType, err error, msg string, with ...Pair) {
